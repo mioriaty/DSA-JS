@@ -16,28 +16,28 @@ import Queue from '../../../data-structures/queue/Queue';
  * @returns {Callbacks}
  */
 function initCallbacks(callbacks = {}) {
-    const initiatedCallback = callbacks;
+  const initiatedCallback = callbacks;
 
-    const stubCallback = () => { };
+  const stubCallback = () => { };
 
-    const allowTraversalCallback = (
-        () => {
-            const seen = {};
-            return ({ nextVertex }) => {
-                if (!seen[nextVertex.getKey()]) {
-                    seen[nextVertex.getKey()] = true;
-                    return true;
-                }
-                return false;
-            };
+  const allowTraversalCallback = (
+    () => {
+      const seen = {};
+      return ({ nextVertex }) => {
+        if (!seen[nextVertex.getKey()]) {
+          seen[nextVertex.getKey()] = true;
+          return true;
         }
-    )();
+        return false;
+      };
+    }
+  )();
 
-    initiatedCallback.allowTraversal = callbacks.allowTraversal || allowTraversalCallback;
-    initiatedCallback.enterVertex = callbacks.enterVertex || stubCallback;
-    initiatedCallback.leaveVertex = callbacks.leaveVertex || stubCallback;
+  initiatedCallback.allowTraversal = callbacks.allowTraversal || allowTraversalCallback;
+  initiatedCallback.enterVertex = callbacks.enterVertex || stubCallback;
+  initiatedCallback.leaveVertex = callbacks.leaveVertex || stubCallback;
 
-    return initiatedCallback;
+  return initiatedCallback;
 }
 
 /**
@@ -46,29 +46,29 @@ function initCallbacks(callbacks = {}) {
  * @param {Callbacks} [originalCallbacks]
  */
 export default function breadthFirstSearch(graph, startVertex, originalCallbacks) {
-    const callbacks = initCallbacks(originalCallbacks);
-    const vertexQueue = new Queue();
+  const callbacks = initCallbacks(originalCallbacks);
+  const vertexQueue = new Queue();
 
-    // Khởi tạo hàng đợi.
-    vertexQueue.enqueue(startVertex);
+  // Khởi tạo hàng đợi.
+  vertexQueue.enqueue(startVertex);
 
-    let previousVertex = null;
+  let previousVertex = null;
 
-    // Duyệt tất cả các đỉnh từ hành đợi.
-    while (!vertexQueue.isEmpty()) {
-        const currentVertex = vertexQueue.dequeue();
-        callbacks.enterVertex({ currentVertex, previousVertex });
+  // Duyệt tất cả các đỉnh từ hành đợi.
+  while (!vertexQueue.isEmpty()) {
+    const currentVertex = vertexQueue.dequeue();
+    callbacks.enterVertex({ currentVertex, previousVertex });
 
-        // Thêm tất cả đỉnh kề vào hàng đợi cho việc duyệt trong tương lai.
-        graph.getNeighbors(currentVertex).forEach((nextVertex) => {
-            if (callbacks.allowTraversal({ previousVertex, currentVertex, nextVertex })) {
-                vertexQueue.enqueue(nextVertex);
-            }
-        });
+    // Thêm tất cả đỉnh kề vào hàng đợi cho việc duyệt trong tương lai.
+    graph.getNeighbors(currentVertex).forEach((nextVertex) => {
+      if (callbacks.allowTraversal({ previousVertex, currentVertex, nextVertex })) {
+        vertexQueue.enqueue(nextVertex);
+      }
+    });
 
-        callbacks.leaveVertex({ currentVertex, previousVertex });
+    callbacks.leaveVertex({ currentVertex, previousVertex });
 
-        // Lưu đỉnh hiện tại trước khi lặp lại.
-        previousVertex = currentVertex;
-    }
+    // Lưu đỉnh hiện tại trước khi lặp lại.
+    previousVertex = currentVertex;
+  }
 }

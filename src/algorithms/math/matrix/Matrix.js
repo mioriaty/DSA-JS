@@ -12,13 +12,13 @@
  * @returns {Shape}
  */
 export const shape = (m) => {
-    const shapes = [];
-    let dimension = m;
-    while (dimension && Array.isArray(dimension)) {
-        shapes.push(dimension.length);
-        dimension = (dimension.length && [...dimension][0]) || null;
-    }
-    return shapes;
+  const shapes = [];
+  let dimension = m;
+  while (dimension && Array.isArray(dimension)) {
+    shapes.push(dimension.length);
+    dimension = (dimension.length && [...dimension][0]) || null;
+  }
+  return shapes;
 };
 
 /**
@@ -28,13 +28,13 @@ export const shape = (m) => {
  * @throws {Error}
  */
 const validateType = (m) => {
-    if (
-        !m
+  if (
+    !m
         || !Array.isArray(m)
         || !Array.isArray(m[0])
-    ) {
-        throw new Error('Invalid matrix format');
-    }
+  ) {
+    throw new Error('Invalid matrix format');
+  }
 };
 
 /**
@@ -44,11 +44,11 @@ const validateType = (m) => {
  * @throws {Error}
  */
 const validate2D = (m) => {
-    validateType(m);
-    const aShape = shape(m);
-    if (aShape.length !== 2) {
-        throw new Error('Matrix is not of 2D shape');
-    }
+  validateType(m);
+  const aShape = shape(m);
+  if (aShape.length !== 2) {
+    throw new Error('Matrix is not of 2D shape');
+  }
 };
 
 /**
@@ -59,21 +59,21 @@ const validate2D = (m) => {
  * @trows {Error}
  */
 export const validateSameShape = (a, b) => {
-    validateType(a);
-    validateType(b);
+  validateType(a);
+  validateType(b);
 
-    const aShape = shape(a);
-    const bShape = shape(b);
+  const aShape = shape(a);
+  const bShape = shape(b);
 
-    if (aShape.length !== bShape.length) {
-        throw new Error('Matrices have different dimensions');
+  if (aShape.length !== bShape.length) {
+    throw new Error('Matrices have different dimensions');
+  }
+
+  while (aShape.length && bShape.length) {
+    if (aShape.pop() !== bShape.pop()) {
+      throw new Error('Matrices have different shapes');
     }
-
-    while (aShape.length && bShape.length) {
-        if (aShape.pop() !== bShape.pop()) {
-            throw new Error('Matrices have different shapes');
-        }
-    }
+  }
 };
 
 /**
@@ -84,27 +84,27 @@ export const validateSameShape = (a, b) => {
  * @returns {Matrix}
  */
 export const generate = (mShape, fill) => {
-    /**
+  /**
      * Tạo ma trận bằng cách đệ quy.
      *
      * @param {Shape} recShape - kích thước của ma trận cần tạo.
      * @param {CellIndices} recIndices
      * @returns {Matrix}
      */
-    const generateRecursively = (recShape, recIndices) => {
-        if (recShape.length === 1) {
-            return Array(recShape[0])
-                .fill(null)
-                .map((cellValue, cellIndex) => fill([...recIndices, cellIndex]));
-        }
-        const m = [];
-        for (let i = 0; i < recShape[0]; i += 1) {
-            m.push(generateRecursively(recShape.slice(1), [...recIndices, i]));
-        }
-        return m;
-    };
+  const generateRecursively = (recShape, recIndices) => {
+    if (recShape.length === 1) {
+      return Array(recShape[0])
+        .fill(null)
+        .map((cellValue, cellIndex) => fill([...recIndices, cellIndex]));
+    }
+    const m = [];
+    for (let i = 0; i < recShape[0]; i += 1) {
+      m.push(generateRecursively(recShape.slice(1), [...recIndices, i]));
+    }
+    return m;
+  };
 
-    return generateRecursively(mShape, []);
+  return generateRecursively(mShape, []);
 };
 
 /**
@@ -114,7 +114,7 @@ export const generate = (mShape, fill) => {
  * @returns {Matrix}
  */
 export const zeros = (mShape) => {
-    return generate(mShape, () => 0);
+  return generate(mShape, () => 0);
 };
 
 /**
@@ -124,32 +124,32 @@ export const zeros = (mShape) => {
  * @throws {Error}
  */
 export const dot = (a, b) => {
-    // Xác thực ma trận hai chiều.
-    validate2D(a);
-    validate2D(b);
+  // Xác thực ma trận hai chiều.
+  validate2D(a);
+  validate2D(b);
 
-    // Kiểm tra ma trận.
-    const aShape = shape(a);
-    const bShape = shape(b);
-    if (aShape[1] !== bShape[0]) {
-        throw new Error('Matrices have incompatible shape for multiplication');
+  // Kiểm tra ma trận.
+  const aShape = shape(a);
+  const bShape = shape(b);
+  if (aShape[1] !== bShape[0]) {
+    throw new Error('Matrices have incompatible shape for multiplication');
+  }
+
+  // Nhân vô hướng hai ma trận.
+  const outputShape = [aShape[0], bShape[1]];
+  const c = zeros(outputShape);
+
+  for (let bCol = 0; bCol < b[0].length; bCol += 1) {
+    for (let aRow = 0; aRow < a.length; aRow += 1) {
+      let cellSum = 0;
+      for (let aCol = 0; aCol < a[aRow].length; aCol += 1) {
+        cellSum += a[aRow][aCol] * b[aCol][bCol];
+      }
+      c[aRow][bCol] = cellSum;
     }
+  }
 
-    // Nhân vô hướng hai ma trận.
-    const outputShape = [aShape[0], bShape[1]];
-    const c = zeros(outputShape);
-
-    for (let bCol = 0; bCol < b[0].length; bCol += 1) {
-        for (let aRow = 0; aRow < a.length; aRow += 1) {
-            let cellSum = 0;
-            for (let aCol = 0; aCol < a[aRow].length; aCol += 1) {
-                cellSum += a[aRow][aCol] * b[aCol][bCol];
-            }
-            c[aRow][bCol] = cellSum;
-        }
-    }
-
-    return c;
+  return c;
 };
 
 /**
@@ -160,15 +160,15 @@ export const dot = (a, b) => {
  * @throws {Error}
  */
 export const t = (m) => {
-    validate2D(m);
-    const mShape = shape(m);
-    const transposed = zeros([mShape[1], mShape[0]]);
-    for (let row = 0; row < m.length; row += 1) {
-        for (let col = 0; col < m[0].length; col += 1) {
-            transposed[col][row] = m[row][col];
-        }
+  validate2D(m);
+  const mShape = shape(m);
+  const transposed = zeros([mShape[1], mShape[0]]);
+  for (let row = 0; row < m.length; row += 1) {
+    for (let col = 0; col < m[0].length; col += 1) {
+      transposed[col][row] = m[row][col];
     }
-    return transposed;
+  }
+  return transposed;
 };
 
 /**
@@ -178,27 +178,27 @@ export const t = (m) => {
  * @param {function(indices: CellIndices, c: Cell)} visit
  */
 export const walk = (m, visit) => {
-    /**
+  /**
      * Duyệt ma trận bằng đệ quy.
      *
      * @param {Matrix} recM
      * @param {CellIndices} cellIndices
      * @return {Matrix}
      */
-    const recWalk = (recM, cellIndices) => {
-        const recMShape = shape(recM);
+  const recWalk = (recM, cellIndices) => {
+    const recMShape = shape(recM);
 
-        if (recMShape.length === 1) {
-            for (let i = 0; i < recM.length; i += 1) {
-                visit([...cellIndices, i], recM[i]);
-            }
-        }
-        for (let i = 0; i < recM.length; i += 1) {
-            recWalk(recM[i], [...cellIndices, i]);
-        }
-    };
+    if (recMShape.length === 1) {
+      for (let i = 0; i < recM.length; i += 1) {
+        visit([...cellIndices, i], recM[i]);
+      }
+    }
+    for (let i = 0; i < recM.length; i += 1) {
+      recWalk(recM[i], [...cellIndices, i]);
+    }
+  };
 
-    recWalk(m, []);
+  recWalk(m, []);
 };
 
 /**
@@ -209,13 +209,13 @@ export const walk = (m, visit) => {
  * @return {Cell}
  */
 export const getCellAtIndex = (m, cellIndices) => {
-    // Bắt đầu ở hàng chứa phần tử đấy.
-    let cell = m[cellIndices[0]];
-    for (let dimIdx = 1; dimIdx < cellIndices.length - 1; dimIdx += 1) {
-        cell = cell[cellIndices[dimIdx]];
-    }
-    // Trả về giá trị cho phần tử tại vị đã trí xác định.
-    return cell[cellIndices[cellIndices.length - 1]];
+  // Bắt đầu ở hàng chứa phần tử đấy.
+  let cell = m[cellIndices[0]];
+  for (let dimIdx = 1; dimIdx < cellIndices.length - 1; dimIdx += 1) {
+    cell = cell[cellIndices[dimIdx]];
+  }
+  // Trả về giá trị cho phần tử tại vị đã trí xác định.
+  return cell[cellIndices[cellIndices.length - 1]];
 };
 
 /**
@@ -226,13 +226,13 @@ export const getCellAtIndex = (m, cellIndices) => {
  * @param {Cell} cellValue - Giá trị mới của phần tử.
  */
 export const updateCellAtIndex = (m, cellIndices, cellValue) => {
-    // Chúng ta bắt đầu ở hàng chứa phần tử.
-    let cell = m[cellIndices[0]];
-    for (let dimIdx = 1; dimIdx < cellIndices.length - 1; dimIdx += 1) {
-        cell = cell[cellIndices[dimIdx]];
-    }
-    // Gán giá trị cho phần tử cần cập nhật 
-    cell[cellIndices[cellIndices.length - 1]] = cellValue;
+  // Chúng ta bắt đầu ở hàng chứa phần tử.
+  let cell = m[cellIndices[0]];
+  for (let dimIdx = 1; dimIdx < cellIndices.length - 1; dimIdx += 1) {
+    cell = cell[cellIndices[dimIdx]];
+  }
+  // Gán giá trị cho phần tử cần cập nhật
+  cell[cellIndices[cellIndices.length - 1]] = cellValue;
 };
 
 /**
@@ -243,19 +243,19 @@ export const updateCellAtIndex = (m, cellIndices, cellValue) => {
  * @return {Matrix}
  */
 export const add = (a, b) => {
-    validateSameShape(a, b);
-    const result = zeros(shape(a));
+  validateSameShape(a, b);
+  const result = zeros(shape(a));
 
-    walk(a, (cellIndices, cellValue) => {
-        updateCellAtIndex(result, cellIndices, cellValue);
-    });
+  walk(a, (cellIndices, cellValue) => {
+    updateCellAtIndex(result, cellIndices, cellValue);
+  });
 
-    walk(b, (cellIndices, cellValue) => {
-        const currentCellValue = getCellAtIndex(result, cellIndices);
-        updateCellAtIndex(result, cellIndices, currentCellValue + cellValue);
-    });
+  walk(b, (cellIndices, cellValue) => {
+    const currentCellValue = getCellAtIndex(result, cellIndices);
+    updateCellAtIndex(result, cellIndices, currentCellValue + cellValue);
+  });
 
-    return result;
+  return result;
 };
 
 /**
@@ -266,19 +266,19 @@ export const add = (a, b) => {
  * @return {Matrix}
  */
 export const mul = (a, b) => {
-    validateSameShape(a, b);
-    const result = zeros(shape(a));
+  validateSameShape(a, b);
+  const result = zeros(shape(a));
 
-    walk(a, (cellIndices, cellValue) => {
-        updateCellAtIndex(result, cellIndices, cellValue);
-    });
+  walk(a, (cellIndices, cellValue) => {
+    updateCellAtIndex(result, cellIndices, cellValue);
+  });
 
-    walk(b, (cellIndices, cellValue) => {
-        const currentCellValue = getCellAtIndex(result, cellIndices);
-        updateCellAtIndex(result, cellIndices, currentCellValue * cellValue);
-    });
+  walk(b, (cellIndices, cellValue) => {
+    const currentCellValue = getCellAtIndex(result, cellIndices);
+    updateCellAtIndex(result, cellIndices, currentCellValue * cellValue);
+  });
 
-    return result;
+  return result;
 };
 
 /**
@@ -289,17 +289,17 @@ export const mul = (a, b) => {
  * @return {Matrix}
  */
 export const sub = (a, b) => {
-    validateSameShape(a, b);
-    const result = zeros(shape(a));
+  validateSameShape(a, b);
+  const result = zeros(shape(a));
 
-    walk(a, (cellIndices, cellValue) => {
-        updateCellAtIndex(result, cellIndices, cellValue);
-    });
+  walk(a, (cellIndices, cellValue) => {
+    updateCellAtIndex(result, cellIndices, cellValue);
+  });
 
-    walk(b, (cellIndices, cellValue) => {
-        const currentCellValue = getCellAtIndex(result, cellIndices);
-        updateCellAtIndex(result, cellIndices, currentCellValue - cellValue);
-    });
+  walk(b, (cellIndices, cellValue) => {
+    const currentCellValue = getCellAtIndex(result, cellIndices);
+    updateCellAtIndex(result, cellIndices, currentCellValue - cellValue);
+  });
 
-    return result;
+  return result;
 };

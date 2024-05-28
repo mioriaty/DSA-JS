@@ -9,10 +9,10 @@
  * @param {traversalCallback} callback
  */
 function reverseTraversalRecursive(node, callback) {
-    if (node) {
-        reverseTraversalRecursive(node.next, callback);
-        callback(node.value);
-    }
+  if (node) {
+    reverseTraversalRecursive(node.next, callback);
+    callback(node.value);
+  }
 }
 
 /**
@@ -20,5 +20,5 @@ function reverseTraversalRecursive(node, callback) {
  * @param {traversalCallback} callback
  */
 export default function reverseTraversal(linkedList, callback) {
-    reverseTraversalRecursive(linkedList.head, callback);
+  reverseTraversalRecursive(linkedList.head, callback);
 }

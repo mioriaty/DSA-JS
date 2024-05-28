@@ -3,17 +3,17 @@
  * @return {number[]}
  */
 export default function sieveOfEratosthenes(maxNumber) {
-    const isPrime = new Array(maxNumber + 1).fill(true);
-    isPrime[0] = false;
-    isPrime[1] = false;
+  const isPrime = new Array(maxNumber + 1).fill(true);
+  isPrime[0] = false;
+  isPrime[1] = false;
 
-    const primes = [];
+  const primes = [];
 
-    for (let number = 2; number <= maxNumber; number += 1) {
-        if (isPrime[number] === true) {
-            primes.push(number);
+  for (let number = 2; number <= maxNumber; number += 1) {
+    if (isPrime[number] === true) {
+      primes.push(number);
 
-            /*
+      /*
              * Tối ưu .
              * Bắt đầu đánh dấu bội số của `p` từ `p * p`, thay vì `2 * p`.
              * Lý do nó hoạt động là vì tại thời điểm này, bội số nhỏ hơn của `p`
@@ -23,14 +23,14 @@ export default function sieveOfEratosthenes(maxNumber) {
              * trong trường hợp đó ta đổi lại thành:
              * let nextNumber = 2 * number;
              */
-            let nextNumber = number * number;
+      let nextNumber = number * number;
 
-            while (nextNumber <= maxNumber) {
-                isPrime[nextNumber] = false;
-                nextNumber += number;
-            }
-        }
+      while (nextNumber <= maxNumber) {
+        isPrime[nextNumber] = false;
+        nextNumber += number;
+      }
     }
+  }
 
-    return primes;
+  return primes;
 }

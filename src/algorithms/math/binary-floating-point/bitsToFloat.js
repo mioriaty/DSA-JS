@@ -29,24 +29,24 @@
  * @type {PrecisionConfigs}
  */
 const precisionConfigs = {
-    // @xem: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
-    half: {
-        signBitsCount: 1,
-        exponentBitsCount: 5,
-        fractionBitsCount: 10,
-    },
-    // @xem: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
-    single: {
-        signBitsCount: 1,
-        exponentBitsCount: 8,
-        fractionBitsCount: 23,
-    },
-    // @xem: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
-    double: {
-        signBitsCount: 1,
-        exponentBitsCount: 11,
-        fractionBitsCount: 52,
-    },
+  // @xem: https://en.wikipedia.org/wiki/Half-precision_floating-point_format
+  half: {
+    signBitsCount: 1,
+    exponentBitsCount: 5,
+    fractionBitsCount: 10
+  },
+  // @xem: https://en.wikipedia.org/wiki/Single-precision_floating-point_format
+  single: {
+    signBitsCount: 1,
+    exponentBitsCount: 8,
+    fractionBitsCount: 23
+  },
+  // @xem: https://en.wikipedia.org/wiki/Double-precision_floating-point_format
+  double: {
+    signBitsCount: 1,
+    exponentBitsCount: 11,
+    fractionBitsCount: 52
+  }
 };
 
 /**
@@ -57,35 +57,35 @@ const precisionConfigs = {
  * @return {number} - số phẩy động dưới dạng thập phân.
  */
 function bitsToFloat(bits, precisionConfig) {
-    const { signBitsCount, exponentBitsCount } = precisionConfig;
+  const { signBitsCount, exponentBitsCount } = precisionConfig;
 
-    // Tìm dấu (dương hay âm).
-    const sign = (-1) ** bits[0]; // -1^1 = -1, -1^0 = 1
+  // Tìm dấu (dương hay âm).
+  const sign = (-1) ** bits[0]; // -1^1 = -1, -1^0 = 1
 
-    // Tính phần mũ.
-    const exponentBias = 2 ** (exponentBitsCount - 1) - 1;
-    const exponentBits = bits.slice(signBitsCount, signBitsCount + exponentBitsCount);
-    const exponentUnbiased = exponentBits.reduce(
-        (exponentSoFar, currentBit, bitIndex) => {
-            const bitPowerOfTwo = 2 ** (exponentBitsCount - bitIndex - 1);
-            return exponentSoFar + currentBit * bitPowerOfTwo;
-        },
-        0,
-    );
-    const exponent = exponentUnbiased - exponentBias;
+  // Tính phần mũ.
+  const exponentBias = 2 ** (exponentBitsCount - 1) - 1;
+  const exponentBits = bits.slice(signBitsCount, signBitsCount + exponentBitsCount);
+  const exponentUnbiased = exponentBits.reduce(
+    (exponentSoFar, currentBit, bitIndex) => {
+      const bitPowerOfTwo = 2 ** (exponentBitsCount - bitIndex - 1);
+      return exponentSoFar + currentBit * bitPowerOfTwo;
+    },
+    0
+  );
+  const exponent = exponentUnbiased - exponentBias;
 
-    // Tình phần định trị.
-    const fractionBits = bits.slice(signBitsCount + exponentBitsCount);
-    const fraction = fractionBits.reduce(
-        (fractionSoFar, currentBit, bitIndex) => {
-            const bitPowerOfTwo = 2 ** -(bitIndex + 1);
-            return fractionSoFar + currentBit * bitPowerOfTwo;
-        },
-        0,
-    );
+  // Tình phần định trị.
+  const fractionBits = bits.slice(signBitsCount + exponentBitsCount);
+  const fraction = fractionBits.reduce(
+    (fractionSoFar, currentBit, bitIndex) => {
+      const bitPowerOfTwo = 2 ** -(bitIndex + 1);
+      return fractionSoFar + currentBit * bitPowerOfTwo;
+    },
+    0
+  );
 
-    // Kết hợp tất cả các phần với nhau để có kết quả cuối cùng.
-    return sign * (2 ** exponent) * (1 + fraction);
+  // Kết hợp tất cả các phần với nhau để có kết quả cuối cùng.
+  return sign * (2 ** exponent) * (1 + fraction);
 }
 
 /**
@@ -95,7 +95,7 @@ function bitsToFloat(bits, precisionConfig) {
  * @return {number} - số phẩy động đã được chuyển về dạng thập phân.
  */
 export function bitsToFloat16(bits) {
-    return bitsToFloat(bits, precisionConfigs.half);
+  return bitsToFloat(bits, precisionConfigs.half);
 }
 
 /**
@@ -105,7 +105,7 @@ export function bitsToFloat16(bits) {
  * @return {number} - số phẩy động đã được chuyển về dạng thập phân.
  */
 export function bitsToFloat32(bits) {
-    return bitsToFloat(bits, precisionConfigs.single);
+  return bitsToFloat(bits, precisionConfigs.single);
 }
 
 /**
@@ -115,5 +115,5 @@ export function bitsToFloat32(bits) {
  * @return {number} - số phẩy động đã được chuyển về dạng thập phân.
  */
 export function bitsToFloat64(bits) {
-    return bitsToFloat(bits, precisionConfigs.double);
+  return bitsToFloat(bits, precisionConfigs.double);
 }

@@ -13,16 +13,16 @@ import Queue from '../../../data-structures/queue/Queue';
  * @returns {Callbacks}
  */
 function initCallbacks(callbacks = {}) {
-    const initiatedCallback = callbacks;
+  const initiatedCallback = callbacks;
 
-    const stubCallback = () => { };
-    const defaultAllowTraversal = () => true;
+  const stubCallback = () => { };
+  const defaultAllowTraversal = () => true;
 
-    initiatedCallback.allowTraversal = callbacks.allowTraversal || defaultAllowTraversal;
-    initiatedCallback.enterNode = callbacks.enterNode || stubCallback;
-    initiatedCallback.leaveNode = callbacks.leaveNode || stubCallback;
+  initiatedCallback.allowTraversal = callbacks.allowTraversal || defaultAllowTraversal;
+  initiatedCallback.enterNode = callbacks.enterNode || stubCallback;
+  initiatedCallback.leaveNode = callbacks.leaveNode || stubCallback;
 
-    return initiatedCallback;
+  return initiatedCallback;
 }
 
 /**
@@ -30,29 +30,29 @@ function initCallbacks(callbacks = {}) {
  * @param {Callbacks} [originalCallbacks]
  */
 export default function breadthFirstSearch(rootNode, originalCallbacks) {
-    const callbacks = initCallbacks(originalCallbacks);
-    const nodeQueue = new Queue();
+  const callbacks = initCallbacks(originalCallbacks);
+  const nodeQueue = new Queue();
 
-    // Khởi tạo hàng đợi.
-    nodeQueue.enqueue(rootNode);
+  // Khởi tạo hàng đợi.
+  nodeQueue.enqueue(rootNode);
 
-    while (!nodeQueue.isEmpty()) {
-        const currentNode = nodeQueue.dequeue();
+  while (!nodeQueue.isEmpty()) {
+    const currentNode = nodeQueue.dequeue();
 
-        callbacks.enterNode(currentNode);
+    callbacks.enterNode(currentNode);
 
-        // Thêm tất cả các phần tử con vào hàng đợi để duyệt trong tương lai.
+    // Thêm tất cả các phần tử con vào hàng đợi để duyệt trong tương lai.
 
-        // Duyệt nhánh trái.
-        if (currentNode.left && callbacks.allowTraversal(currentNode, currentNode.left)) {
-            nodeQueue.enqueue(currentNode.left);
-        }
-
-        // Duyệt nhánh phải.
-        if (currentNode.right && callbacks.allowTraversal(currentNode, currentNode.right)) {
-            nodeQueue.enqueue(currentNode.right);
-        }
-
-        callbacks.leaveNode(currentNode);
+    // Duyệt nhánh trái.
+    if (currentNode.left && callbacks.allowTraversal(currentNode, currentNode.left)) {
+      nodeQueue.enqueue(currentNode.left);
     }
+
+    // Duyệt nhánh phải.
+    if (currentNode.right && callbacks.allowTraversal(currentNode, currentNode.right)) {
+      nodeQueue.enqueue(currentNode.right);
+    }
+
+    callbacks.leaveNode(currentNode);
+  }
 }

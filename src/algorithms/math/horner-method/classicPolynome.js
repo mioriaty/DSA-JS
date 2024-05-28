@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Trả về biểu diễn của đa thức tại giá trị cụ thể.
  * Sử dụng cách tiếp cận đơn giản với luỹ thừa.
  *
@@ -8,10 +8,10 @@
  * @return {number}
  */
 export default function classicPolynome(coefficients, xVal) {
-    return coefficients.reverse().reduce(
-        (accumulator, currentCoefficient, index) => {
-            return accumulator + currentCoefficient * (xVal ** index);
-        },
-        0,
-    );
+  return coefficients.reverse().reduce(
+    (accumulator, currentCoefficient, index) => {
+      return accumulator + currentCoefficient * (xVal ** index);
+    },
+    0
+  );
 }

@@ -10,20 +10,20 @@ const englishAlphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
  * @return {Object} - vd: {'a': 'd', 'b': 'e', 'c': 'f', ..., 'z': 'c'}
  */
 const getCipherMap = (alphabet, shift) => {
-    return alphabet
-        .reduce((charsMap, currentChar, charIndex) => {
-            const charsMapClone = { ...charsMap };
-            // Làm cho sự thay đổi trở thành chu kỳ 
-            // (tức là với dịch chuyển là 1 - 'z' sẽ được ánh xạ thành 'a').
-            let encryptedCharIndex = (charIndex + shift) % alphabet.length;
-            // Hỗ trợ dịch chuyển âm để tạo bản đồ giải mã
-            // (tức là với dịch chuyển -1 - 'a' sẽ được ánh xạ thành 'z').
-            if (encryptedCharIndex < 0) {
-                encryptedCharIndex += alphabet.length;
-            }
-            charsMapClone[currentChar] = alphabet[encryptedCharIndex];
-            return charsMapClone;
-        }, {});
+  return alphabet
+    .reduce((charsMap, currentChar, charIndex) => {
+      const charsMapClone = { ...charsMap };
+      // Làm cho sự thay đổi trở thành chu kỳ
+      // (tức là với dịch chuyển là 1 - 'z' sẽ được ánh xạ thành 'a').
+      let encryptedCharIndex = (charIndex + shift) % alphabet.length;
+      // Hỗ trợ dịch chuyển âm để tạo bản đồ giải mã
+      // (tức là với dịch chuyển -1 - 'a' sẽ được ánh xạ thành 'z').
+      if (encryptedCharIndex < 0) {
+        encryptedCharIndex += alphabet.length;
+      }
+      charsMapClone[currentChar] = alphabet[encryptedCharIndex];
+      return charsMapClone;
+    }, {});
 };
 
 /**
@@ -33,13 +33,13 @@ const getCipherMap = (alphabet, shift) => {
  * @return {string}
  */
 export const caesarCipherEncrypt = (str, shift, alphabet = englishAlphabet) => {
-    // Tạo bản đồ mã hoá:
-    const cipherMap = getCipherMap(alphabet, shift);
-    return str
-        .toLowerCase()
-        .split('')
-        .map((char) => cipherMap[char] || char)
-        .join('');
+  // Tạo bản đồ mã hoá:
+  const cipherMap = getCipherMap(alphabet, shift);
+  return str
+    .toLowerCase()
+    .split('')
+    .map((char) => cipherMap[char] || char)
+    .join('');
 };
 
 /**
@@ -49,11 +49,11 @@ export const caesarCipherEncrypt = (str, shift, alphabet = englishAlphabet) => {
  * @return {string}
  */
 export const caesarCipherDecrypt = (str, shift, alphabet = englishAlphabet) => {
-    // Tạo bản đồ giải mã:
-    const cipherMap = getCipherMap(alphabet, -shift);
-    return str
-        .toLowerCase()
-        .split('')
-        .map((char) => cipherMap[char] || char)
-        .join('');
+  // Tạo bản đồ giải mã:
+  const cipherMap = getCipherMap(alphabet, -shift);
+  return str
+    .toLowerCase()
+    .split('')
+    .map((char) => cipherMap[char] || char)
+    .join('');
 };

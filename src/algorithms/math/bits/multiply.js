@@ -25,17 +25,17 @@ import isPositive from './isPositive';
  * @return {number}
  */
 export default function multiply(a, b) {
-    // Nếu một trong a và b hoặc cả hai là không thì: 
-    if (b === 0 || a === 0) {
-        return 0;
-    }
+  // Nếu một trong a và b hoặc cả hai là không thì:
+  if (b === 0 || a === 0) {
+    return 0;
+  }
 
-    // Nếu không, chúng ta sẽ có ba trường hợp khác nhau được mô tả ở trên.
-    const multiplyByOddPositive = () => multiply(multiplyByTwo(a), divideByTwo(b - 1)) + a;
-    const multiplyByOddNegative = () => multiply(multiplyByTwo(a), divideByTwo(b + 1)) - a;
+  // Nếu không, chúng ta sẽ có ba trường hợp khác nhau được mô tả ở trên.
+  const multiplyByOddPositive = () => multiply(multiplyByTwo(a), divideByTwo(b - 1)) + a;
+  const multiplyByOddNegative = () => multiply(multiplyByTwo(a), divideByTwo(b + 1)) - a;
 
-    const multiplyByEven = () => multiply(multiplyByTwo(a), divideByTwo(b));
-    const multiplyByOdd = () => (isPositive(b) ? multiplyByOddPositive() : multiplyByOddNegative());
+  const multiplyByEven = () => multiply(multiplyByTwo(a), divideByTwo(b));
+  const multiplyByOdd = () => (isPositive(b) ? multiplyByOddPositive() : multiplyByOddNegative());
 
-    return isEven(b) ? multiplyByEven() : multiplyByOdd();
+  return isEven(b) ? multiplyByEven() : multiplyByOdd();
 }
